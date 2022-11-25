@@ -2,6 +2,7 @@
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using lesson6.Autofac;
+using lesson6.Controller;
 using lesson6.Service;
 using lesson6.Service.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace lesson6
 {
-    internal class Sample04
+    internal class hw6
     {
         private static IHost? _host;
 
@@ -31,8 +32,21 @@ namespace lesson6
         {
             await Hosting.StartAsync();
             await PrintBuyersAsync();
-            Console.ReadKey();
+            await MenuProduct();
+            //Console.ReadKey();
             await Hosting.StopAsync();
+        }
+
+        private static async Task MenuProduct()
+        {
+            await using var serviceScope = Services.CreateAsyncScope();
+            var services = serviceScope.ServiceProvider;
+
+            var context = services.GetRequiredService<OrdersDbContext>();
+            var logger = services.GetRequiredService<ILogger<ProductController>>();
+            var productService = services.GetRequiredService<ProductService>();
+
+            ProductController.Menu(productService);
         }
 
         private static async Task PrintBuyersAsync()
@@ -43,7 +57,7 @@ namespace lesson6
             var services = serviceScope.ServiceProvider;
 
             var context = services.GetRequiredService<OrdersDbContext>();
-            var logger = services.GetRequiredService<ILogger<Sample04>>();
+            var logger = services.GetRequiredService<ILogger<hw6>>();
 
             foreach (var buyer in context.Buyers)
             {
@@ -51,14 +65,15 @@ namespace lesson6
             }
             var orderService = services.GetRequiredService<IOrderService>();
 
-            await orderService.CreatAsync(
-                rnd.Next(1, 5),
-                "123,Russian, Address",
-                "+7(903)-000-00-01",
-                new (int, int)[]
-                {
-                    new ValueTuple<int,int>(1, 1)
-                });
+            Console.WriteLine("PrintBuyersAsync");
+            //await orderService.CreatAsunc(
+            //    rnd.Next(1, 5),
+            //    "123,Russian, Address",
+            //    "+7(903)-000-00-01",
+            //    new (int, int)[]
+            //    {
+            //        new ValueTuple<int,int>(1, 1)
+            //    });
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -70,26 +85,16 @@ namespace lesson6
                  {
 
                      container.RegisterType<OrderService>().As<IOrderService>().InstancePerLifetimeScope();
-                     //container.RegisterType<OrderService>().InstancePerLifetimeScope(); //все интерфейсы сам
-                     //container.RegisterModule<ServiceModule>();
-                     //container.RegisterAssemblyModules(Assembly.GetCallingAssembly()); //зарегестрировать все модули сборки
-                     
-                     
-                     //var config = new ConfigurationBuilder()
-                     //.AddJsonFile("autofac.config.json", false, false);
-                     //.AddXmlFile("autofac.config.xml", false, false);
+                     container.RegisterType<ProductService>().InstancePerLifetimeScope();
 
-                     //var module = new ConfigurationModule(config.Build());
-                     //var builder = new ContainerBuilder();
-                     //builder.RegisterModule(module);
+
                  })
                  .ConfigureHostConfiguration(options =>
                  options.AddJsonFile("appsetting.json"))
                  .ConfigureAppConfiguration(options =>
                  options
                      .AddJsonFile("appsetting.json")
-                     .AddXmlFile("appsetting.xml", true)
-                     .AddIniFile("appsetting.ini", true)
+                     
                      .AddEnvironmentVariables()
                      .AddCommandLine(args))
                  .ConfigureLogging(options =>

@@ -21,7 +21,7 @@ namespace lesson6.Service.Impl
             _context = context;
         }
 
-        public async Task<Order> CreatAsunc(int buyerId, string address, string phone, IEnumerable<(int productId, int quantity)> products)
+        public async Task<Order> CreatAsync(int buyerId, string address, string phone, IEnumerable<(int productId, int quantity)> products)
         {
             var buyer = await _context.Buyers.FirstOrDefaultAsync(buyer => buyer.Id == buyerId);
             if (buyer == null)
