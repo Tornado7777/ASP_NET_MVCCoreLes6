@@ -9,7 +9,7 @@ namespace lesson6.Service
 {
     internal interface IOrderService
     {
-        Task<Order> CreatAsunc(
+        Task<Order> CreatAsync(
             int buyerId, 
             string address, 
             string phone, 
