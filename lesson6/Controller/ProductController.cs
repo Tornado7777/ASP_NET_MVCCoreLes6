@@ -27,7 +27,7 @@ namespace lesson6.Controller
                 Console.WriteLine("Выберите действие с каталогом продуктов:");
                 Console.WriteLine("1. Отобразить все продукты.");
                 Console.WriteLine("2. Добавить продукт.");
-                Console.WriteLine("3. Выход.");
+                Console.WriteLine("3. Выход.\n");
                 var key = Console.ReadKey(true).Key;
 
                 switch (key)

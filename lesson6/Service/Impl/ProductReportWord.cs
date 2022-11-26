@@ -15,6 +15,15 @@ namespace lesson6.Service.Impl
         private const string _FieldCatalogDescription = "CatalogDescription";
         private const string _FieldCreateionDate = "CreateionDate";
 
+        private const string _FieldProduct = "Product";
+
+        private const string _FieldProductId = "ProductId";
+        private const string _FieldProductName = "ProductName";
+        private const string _FieldProductCategory = "ProductCategory";
+        private const string _FieldProductPrice = "ProductPrice";
+
+        private const string _FieldProductTotal = "ProductTotal";
+
         private readonly FileInfo _templateFile;
 
         #endregion
@@ -55,10 +64,21 @@ namespace lesson6.Service.Impl
             reportFile.Delete();
             _templateFile.CopyTo(reportFile.FullName);
 
+            var rows = Products.Select(p => new TableRowContent( new List<FieldContent>
+            {
+                new FieldContent(_FieldProductId,p.id.ToString()),
+                new FieldContent(_FieldProductName,p.name),
+                new FieldContent(_FieldProductCategory,p.category),
+                new FieldContent(_FieldProductPrice, p.price.ToString())
+            })).ToArray();
+
+
             var conent = new Content(
                 new FieldContent(_FieldCatalogName, CatalogName),
                 new FieldContent(_FieldCatalogDescription, CatalogDescription),
-                new FieldContent(_FieldCreateionDate, CreateionDate.ToString("dd.MM.yyyy HH:mm:ss"))
+                new FieldContent(_FieldCreateionDate, CreateionDate.ToString("dd.MM.yyyy HH:mm:ss")),
+                TableContent.Create(_FieldProduct, rows),
+                new FieldContent(_FieldProductTotal, Products.Sum(p => p.price).ToString("c"))
                 );
 
             var templateProcessor = new TemplateProcessor(reportFile.FullName)

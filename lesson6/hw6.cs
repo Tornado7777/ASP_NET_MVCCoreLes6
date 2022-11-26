@@ -68,7 +68,7 @@ namespace lesson6
             }
             var orderService = services.GetRequiredService<IOrderService>();
 
-            Console.WriteLine("PrintBuyersAsync");
+            Console.WriteLine("PrintBuyersAsync\n");
             //await orderService.CreatAsunc(
             //    rnd.Next(1, 5),
             //    "123,Russian, Address",
