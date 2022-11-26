@@ -3,6 +3,7 @@ using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using lesson6.Autofac;
 using lesson6.Controller;
+using lesson6.Models.Reports;
 using lesson6.Service;
 using lesson6.Service.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using lesson6.Extensions;
 
 namespace lesson6
 {
@@ -47,6 +49,7 @@ namespace lesson6
             var productService = services.GetRequiredService<ProductService>();
 
             ProductController.Menu(productService);
+           
         }
 
         private static async Task PrintBuyersAsync()
@@ -74,6 +77,37 @@ namespace lesson6
             //    {
             //        new ValueTuple<int,int>(1, 1)
             //    });
+
+            var productCatalog = new ProductsCatalog
+            {
+                Name = "Каталог товаров",
+                Description = "Актуальный список товаров на дату",
+                CreationDate = DateTime.Now,
+                Products = context.Products
+            };
+
+            string templateFile = "Templates/DefualtTemplate.docx";
+            IProductReport report = new ProductReportWord(templateFile);
+            CreateReport(report, productCatalog, "ReportProducts.docx");
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reportGenerate">Объект - генератор отчета </param>
+        /// <param name="catalog">Объект с данными</param>
+        /// <param name="reportFileName">Наименование файла-отчета</param>
+        private static void CreateReport(IProductReport reportGenerator, ProductsCatalog catalog, string reportFileName )
+        {
+            reportGenerator.CatalogName = catalog.Name;
+            reportGenerator.CatalogDescription = catalog.Description;
+            reportGenerator.CreateionDate = catalog.CreationDate;
+            reportGenerator.Products = catalog.Products.Select(p => (p.Id, p.Name, p.Category, p.Price));
+
+            var reportFileInfo = reportGenerator.Create(reportFileName);
+
+            reportFileInfo.Execute();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)

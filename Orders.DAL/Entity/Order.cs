@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,11 +14,13 @@ namespace Orders.DAL.Entity
     {
         public DateTime OrderDate { get; set; }
         [Required]
+        [Unicode(true)]
         public string Address { get; set; } = null!;
 
         [Required]
         public string Phone { get; set; } = null!;
         [Required]
+        [Unicode(true)]
         public Buyer Buyer { get; set; } = null!;
 
         public ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>();

@@ -9,7 +9,7 @@
   "ConsoleTitle": "Hello!!!",
   "Settings": {
     "DatabseOptions": {
-      "ConnectionsString": "data source=localhost;initial catalog=OrdersDB;User Id=OrdersDbUser;Password=12345;App=EntityFramework; trustServerCertificate=true"
+      "ConnectionsString": "data source=localhost;initial catalog=OrdersDB;User Id=OrdersDbUser;Password=12345;App=EntityFramework;trustServerCertificate=true;"
     }
   }
 }

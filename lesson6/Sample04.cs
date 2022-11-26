@@ -102,6 +102,9 @@ namespace lesson6
 
         private static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
+            //стандартный способ регистрации сервиса
+            //services.AddTransient<IOrderService, OrderService>();
+
             services.AddDbContext<OrdersDbContext>(options =>
             {
                 options

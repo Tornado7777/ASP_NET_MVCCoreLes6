@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Orders.DAL.Entity
     {
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
+
+        [Unicode(true)]
         public string? Category { get; set; }
     }
 }

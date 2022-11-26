@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +15,7 @@ namespace Orders.DAL.Entity
         public int Id { get; set; }
 
         [Required]
+        [Unicode(true)]
         public string Name { get; set; } = null!;
     }
 }
