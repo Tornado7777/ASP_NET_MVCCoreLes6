@@ -33,13 +33,14 @@ namespace lesson6
         static async Task Main(string[] args)
         {
             await Hosting.StartAsync();
-            await PrintBuyersAsync();
-            await MenuProduct();
+            //await PrintBuyersAsync();
+            //await ProductMenu();
+            await OrderMenu();
             //Console.ReadKey();
             await Hosting.StopAsync();
         }
 
-        private static async Task MenuProduct()
+        private static async Task ProductMenu()
         {
             await using var serviceScope = Services.CreateAsyncScope();
             var services = serviceScope.ServiceProvider;
@@ -49,7 +50,22 @@ namespace lesson6
             var productService = services.GetRequiredService<ProductService>();
 
             ProductController.Menu(productService);
-           
+
+        }
+
+        private static async Task OrderMenu()
+        {
+            await using var serviceScope = Services.CreateAsyncScope();
+            var services = serviceScope.ServiceProvider;
+
+            var context = services.GetRequiredService<OrdersDbContext>();
+            var logger = services.GetRequiredService<ILogger<ProductController>>();
+            var productService = services.GetRequiredService<ProductService>();
+            var orderService = services.GetRequiredService<OrderService>();
+            var buyerService = services.GetRequiredService<BuyerService>();
+
+            OrderController.Menu(productService, orderService, buyerService);
+
         }
 
         private static async Task PrintBuyersAsync()
@@ -69,7 +85,7 @@ namespace lesson6
             var orderService = services.GetRequiredService<IOrderService>();
 
             Console.WriteLine("PrintBuyersAsync\n");
-            //await orderService.CreatAsunc(
+            //await orderService.CreatAsync(
             //    rnd.Next(1, 5),
             //    "123,Russian, Address",
             //    "+7(903)-000-00-01",
@@ -118,8 +134,9 @@ namespace lesson6
                  .ConfigureContainer<ContainerBuilder>(container => //autofac
                  {
 
-                     container.RegisterType<OrderService>().As<IOrderService>().InstancePerLifetimeScope();
+                     container.RegisterType<OrderService>().InstancePerLifetimeScope();
                      container.RegisterType<ProductService>().InstancePerLifetimeScope();
+                     container.RegisterType<BuyerService>().InstancePerLifetimeScope();
 
 
                  })

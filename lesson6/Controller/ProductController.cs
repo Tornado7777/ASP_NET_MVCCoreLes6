@@ -74,6 +74,7 @@ namespace lesson6.Controller
             product = await _productService.CreatAsync(product.Name, product.Price, product.Category);
 
             Console.WriteLine($"{product.Id} {product.Name} {product.Price} {product.Category} created");
+
         }
 
         private static void ShowAllProducts()
