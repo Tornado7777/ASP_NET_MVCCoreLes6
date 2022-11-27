@@ -45,7 +45,7 @@ namespace lesson6.Service.Impl
 
         public async Task<Product> GetById(int productId)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(product => product.Id == productId);
+            var product = await _context.Products.FirstOrDefaultAsync(product => product.Id == productId).ConfigureAwait(false); ;
             if (product == null)
                 throw new Exception($"Product with product id = {productId} not found");
             return product;

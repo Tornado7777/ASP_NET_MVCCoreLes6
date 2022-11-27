@@ -23,15 +23,15 @@ namespace lesson6.Service.Impl
 
         public async Task<Order> CreatAsync(int buyerId, string address, string phone, IEnumerable<(int productId, int quantity)> products)
         {
-            var buyer = await _context.Buyers.FirstOrDefaultAsync(buyer => buyer.Id == buyerId);
+            var buyer = _context.Buyers.FirstOrDefault(buyer => buyer.Id == buyerId); 
             if (buyer == null)
                 throw new Exception("Bueyr not found");
 
             Dictionary<Product, int> productCollection = new Dictionary<Product, int>();
             foreach(var product in products)
             {
-                var productEntity = await _context.Products.FirstOrDefaultAsync(
-                    product => product.Id == product.Id);
+                var productEntity = _context.Products.FirstOrDefault(
+                    p => p.Id == product.productId);
                 if (productEntity == null)
                     throw new Exception("Product not found");
                 if (productCollection.ContainsKey(productEntity))
@@ -55,10 +55,16 @@ namespace lesson6.Service.Impl
 
             await _context.Orders.AddAsync(order);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return order;
 
         }
+
+        public IList<Order> GetAll()
+        {
+            return _context.Orders.Include(order => order.Buyer).Include(order => order.Items).ThenInclude(item => item.Product).ToList();
+        }
+
     }
 }

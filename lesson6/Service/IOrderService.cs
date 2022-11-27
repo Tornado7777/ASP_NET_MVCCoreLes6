@@ -14,5 +14,7 @@ namespace lesson6.Service
             string address, 
             string phone, 
             IEnumerable<(int productId, int quantity)> products);
+
+        public IList<Order> GetAll();
     }
 }
