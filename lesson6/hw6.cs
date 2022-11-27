@@ -49,7 +49,7 @@ namespace lesson6
             var logger = services.GetRequiredService<ILogger<ProductController>>();
             var productService = services.GetRequiredService<ProductService>();
 
-            ProductController.Menu(productService);
+            await ProductController.Menu(productService);
 
         }
 
@@ -64,7 +64,7 @@ namespace lesson6
             var orderService = services.GetRequiredService<OrderService>();
             var buyerService = services.GetRequiredService<BuyerService>();
 
-            OrderController.Menu(productService, orderService, buyerService);
+            await OrderController.Menu(productService, orderService, buyerService);
 
         }
 
@@ -118,7 +118,7 @@ namespace lesson6
         {
             reportGenerator.CatalogName = catalog.Name;
             reportGenerator.CatalogDescription = catalog.Description;
-            reportGenerator.CreateionDate = catalog.CreationDate;
+            reportGenerator.CreationDate = catalog.CreationDate;
             reportGenerator.Products = catalog.Products.Select(p => (p.Id, p.Name, p.Category, p.Price));
 
             var reportFileInfo = reportGenerator.Create(reportFileName);

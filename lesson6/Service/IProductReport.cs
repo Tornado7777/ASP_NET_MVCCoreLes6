@@ -13,7 +13,7 @@ namespace lesson6.Service
     {
         string CatalogName { get; set; }
         string CatalogDescription { get; set; }
-        DateTime CreateionDate { get; set; }
+        DateTime CreationDate { get; set; }
 
         IEnumerable<(int id, string name, string category, decimal price)> Products { get; set; }
         FileInfo Create(string reportTemplateFile);

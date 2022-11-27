@@ -31,8 +31,8 @@ namespace lesson6.Service.Impl
         #region Public Properties
         public string CatalogName { get; set; } = null!;
         public string CatalogDescription { get; set; } = null!;
-        public DateTime CreateionDate { get; set; }
         public IEnumerable<(int id, string name, string category, decimal price)> Products { get; set; }
+        public DateTime CreationDate { get; set; }
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace lesson6.Service.Impl
             var conent = new Content(
                 new FieldContent(_FieldCatalogName, CatalogName),
                 new FieldContent(_FieldCatalogDescription, CatalogDescription),
-                new FieldContent(_FieldCreateionDate, CreateionDate.ToString("dd.MM.yyyy HH:mm:ss")),
+                new FieldContent(_FieldCreateionDate, CreationDate.ToString("dd.MM.yyyy HH:mm:ss")),
                 TableContent.Create(_FieldProduct, rows),
                 new FieldContent(_FieldProductTotal, Products.Sum(p => p.price).ToString("c"))
                 );

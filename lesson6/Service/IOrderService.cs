@@ -16,5 +16,7 @@ namespace lesson6.Service
             IEnumerable<(int productId, int quantity)> products);
 
         public IList<Order> GetAll();
+
+        public Order GetById(int id);
     }
 }

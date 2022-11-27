@@ -1,4 +1,8 @@
-﻿using lesson6.Service;
+﻿using DocumentFormat.OpenXml.InkML;
+using lesson6.Models;
+using lesson6.Models.Reports;
+using lesson6.Service;
+using lesson6.Service.Impl;
 using Orders.DAL.Entity;
 using System;
 using System.Collections.Generic;
@@ -24,8 +28,9 @@ namespace lesson6.Controller
             {
                 Console.WriteLine("Выберите действие с заказами:");
                 Console.WriteLine("1. Отобразить все заказы.");
-                Console.WriteLine("2. Добавить заказ.");
-                Console.WriteLine("3. Выход.\n");
+                Console.WriteLine("2. Отпечатать заказ по Id.");
+                Console.WriteLine("3. Добавить заказ.");
+                Console.WriteLine("4. Выход.\n");
                 var key = Console.ReadKey(true).Key;
 
                 switch (key)
@@ -34,9 +39,13 @@ namespace lesson6.Controller
                         ShowAllOrders();
                         break;
                     case ConsoleKey.D2:
-                        await AddOrder();
+                        ShowAllOrders();
+                        await PrintOrder();
                         break;
                     case ConsoleKey.D3:
+                        await AddOrder();
+                        break;
+                    case ConsoleKey.D4:
                         whileOn = false;
                         break;
                     default:
@@ -55,6 +64,45 @@ namespace lesson6.Controller
             {
                 ShowOrder(order);
             }
+        }
+
+        private static async Task PrintOrder()
+        {
+            Console.WriteLine("Please input buyers id");
+            int orderId = Int32.Parse(Console.ReadLine());
+
+            if (orderId == 0)
+                throw new Exception("Order not found");
+
+            var order = _orderService.GetById(orderId);
+
+            ShowOrder(order);
+
+            var orderReport = new OrderReport();
+            orderReport.Id = order.Id;
+            orderReport.Address = order.Address;
+            orderReport.Phone = order.Phone;
+            orderReport.OrderDate = order.OrderDate;
+            orderReport.Buyer = $" {order.Buyer.Name} {order.Buyer.LastName} {order.Buyer.Patronymic}";
+            orderReport.Products = new List<ItemOrder>();
+            foreach (var item in order.Items)
+            { 
+                var itemOrder = new ItemOrder();
+                itemOrder.Id = item.Product.Id;
+                itemOrder.Name = item.Product.Name;
+                itemOrder.Category = item.Product.Category;
+                itemOrder.Price = item.Product.Price;
+                itemOrder.FullPrice = item.Product.Price * item.Quantity;
+                itemOrder.Quantity = item.Quantity;
+
+                orderReport.Products.Add(itemOrder);
+                
+            };
+
+            string templateFile = "Templates/OrderTemplate.docx";
+            IOrderReport report = new OrderReportWord(templateFile);
+            report.CreateReport(report, orderReport, "ReportOrder.docx");
+
         }
 
         private static async Task AddOrder()

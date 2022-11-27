@@ -66,5 +66,9 @@ namespace lesson6.Service.Impl
             return _context.Orders.Include(order => order.Buyer).Include(order => order.Items).ThenInclude(item => item.Product).ToList();
         }
 
+        public Order GetById(int id)
+        {
+            return _context.Orders.Include(order => order.Buyer).Include(order => order.Items).ThenInclude(item => item.Product).FirstOrDefault(order => order.Id == id);
+        }
     }
 }
